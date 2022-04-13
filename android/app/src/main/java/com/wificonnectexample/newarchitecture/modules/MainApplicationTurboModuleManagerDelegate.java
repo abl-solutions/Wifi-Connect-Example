@@ -1,4 +1,4 @@
-package com.wificonnectexample.newarchitecture.modules;
+package com.example.abl.wificonnectivity.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

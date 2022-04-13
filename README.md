@@ -1,0 +1,38 @@
+# abl solutions - Wifi Connect SDK Example App
+This repository contains a sample application that shows how to use the WiFi Connect SDK of abl solutions.
+
+## OS Requirements
+- Android: minimum SDK version >= 24 (Android 7 - Nougat)
+- iOS: -
+
+## External Dependencies
+To run this example you have to use an external OpenID Connect or OAuth 2.0 Authorization Server. If you
+don't have one yet, you can register a free account at [https://auth0.com](auth0.com). This authorization
+server needs to provide client credentials for a native application.
+
+## Build and run
+```bash
+npm install
+npm run start
+
+# run on Android device
+npm run android
+
+# run on iOS device
+npm run ios
+```
+
+## Usage
+This example uses `react-native-app-auth` to obtain a OAuth 2.0 access token. This token is necessary
+to use the `@abl-solutions/wifi-connect` library. `react-native-app-auth` requires to register a URI
+scheme for the login redirect. See [android/app/build.gradle](./android/app/build.gradle) at 
+`android > manifestPlaceholders > appAuthRedirectScheme` for registering the redirect URI scheme.
+
+Also, you have to register a native application at your OpenID Connect / OAuth 2.0 Authorization Server.
+The obtained credentials and parameters must be provided in [src/Login.ts](src/Login.ts). Make sure that
+you allow the redirect URI in the client settings of your Authorization Server.
+
+Make sure that the issued JSON Web Token (JWT) contains the 
+[https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3](audience) `https://api.wifi.connect.abl-solutions.io`.
+
+The issued JWT must be passed to the `@abl-solutions/wifi-connect` library, otherwise abl won't issue WiFi credentials.

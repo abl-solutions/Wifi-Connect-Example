@@ -134,7 +134,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.wificonnectexample"
+        applicationId "com.example.abl.wificonnectivity"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -160,6 +160,10 @@ android {
                 }
             }
         }
+        
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'com.example.abl.wificonnectivity.login'
+        ]
     }
 
     if (isNewArchitectureEnabled()) {

@@ -1,4 +1,4 @@
-package com.wificonnectexample.newarchitecture.components;
+package com.example.abl.wificonnectivity.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

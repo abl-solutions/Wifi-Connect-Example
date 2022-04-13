@@ -1,4 +1,4 @@
-package com.wificonnectexample;
+package com.example.abl.wificonnectivity;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

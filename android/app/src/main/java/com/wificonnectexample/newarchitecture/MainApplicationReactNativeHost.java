@@ -1,4 +1,4 @@
-package com.wificonnectexample.newarchitecture;
+package com.example.abl.wificonnectivity.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.wificonnectexample.BuildConfig;
-import com.wificonnectexample.newarchitecture.components.MainComponentsRegistry;
-import com.wificonnectexample.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.example.abl.wificonnectivity.BuildConfig;
+import com.example.abl.wificonnectivity.newarchitecture.components.MainComponentsRegistry;
+import com.example.abl.wificonnectivity.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

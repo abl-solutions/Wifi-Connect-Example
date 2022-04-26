@@ -12,15 +12,25 @@ import {
 } from '@abl-solutions/wifi-connect';
 import { authorizationConfig } from './Login';
 
-const options: WifiConnectOptions = {
-  wifiApiEndpoint: 'https://dev.api.wifi.connectivity.abl-solutions.io',
-};
-const wifiConnect: WifiConnect = init(options);
+let wifiConnect: WifiConnect;
 
 export default function App() {
   const [authorization, setAuthorization] =
     React.useState<AuthorizationState>(undefined);
   const [status, setStatus] = React.useState<string>('unknown');
+
+  React.useEffect(() => {
+    if (authorization) {
+      // initialize abl's WiFi-Connect SDK
+      console.log('Initilizing wifi connect');
+
+      const options: WifiConnectOptions = {
+        accessToken: authorization.accessToken,
+        wifiApiEndpoint: 'https://dev.api.wifi.connectivity.abl-solutions.io',
+      };
+      wifiConnect = init(options);
+    }
+  }, [authorization]);
 
   const onConnect = async () => {
     try {
@@ -28,18 +38,38 @@ export default function App() {
         return;
       }
 
-      // usually, the device id should be a value that is uniquely assigned to a device. This identifier
-      // is also used to send push notification to the device (e.g. with Google Firebase Cloud Messaging).
-      const deviceId = uuidv4();
+      const legalTermsAccepted = await wifiConnect.legalTermsAccepted();
+      if (!legalTermsAccepted) {
+        const legalTerms = await wifiConnect.getLatestLegalTerms();
+        Alert.alert('Legal Terms', legalTerms.legalTerms, [
+          {
+            text: 'Reject',
+            onPress: () => {
+              setStatus('legal terms rejected');
+            },
+            style: 'cancel',
+          },
+          {
+            text: 'Accept',
+            onPress: async () => {
+              // accept legal terms
+              await wifiConnect.acceptLegalTerms(legalTerms.version);
 
-      // Connect to abl's WiFi network
-      await wifiConnect.connectToWifi(
-        authorization.accessToken,
-        deviceId,
-        'de-DE',
-      );
+              // usually, the device id should be a value that is uniquely assigned to a device. This identifier
+              // is also used to send push notification to the device (e.g. with Google Firebase Cloud Messaging).
+              const deviceId = uuidv4();
 
-      setStatus('connected');
+              // connect to wifi
+              await wifiConnect.connectToWifi(deviceId, 'de-DE');
+              setStatus('connected');
+            },
+          },
+        ]);
+      } else {
+        // legal terms already accepted - connect to wifi
+        await wifiConnect.connectToWifi(uuidv4(), 'de-DE');
+        setStatus('connected');
+      }
     } catch (e: any) {
       console.log('Connecting to the WiFi failed...');
       console.log(JSON.stringify(e));
@@ -56,6 +86,7 @@ export default function App() {
         refreshToken: authState.refreshToken,
         idToken: authState.idToken,
       });
+
       console.log(authState.accessToken);
     } catch (error: any) {
       Alert.alert('Failed to log in', error.message);

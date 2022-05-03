@@ -3,7 +3,7 @@ This repository contains a sample application that shows how to use the WiFi Con
 
 ## OS Requirements
 - Android: minimum SDK version >= 24 (Android 7 - Nougat)
-- iOS: -
+- iOS: minimum iOS version >= 11.0
 
 ## External Dependencies
 To run this example you have to use an external OpenID Connect or OAuth 2.0 Authorization Server. If you
@@ -19,6 +19,7 @@ npm run start
 npm run android
 
 # run on iOS device
+cd ios && pod install
 npm run ios
 ```
 

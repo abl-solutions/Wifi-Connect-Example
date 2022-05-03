@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		6B0B4F702821B895001F9A2B /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B4F6F2821B895001F9A2B /* NetworkExtension.framework */; };
 		7699B88040F8A987B510C191 /* libPods-WifiConnectExample-WifiConnectExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-WifiConnectExample-WifiConnectExampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -41,6 +42,8 @@
 		5709B34CF0A7D63546082F79 /* Pods-WifiConnectExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WifiConnectExample.release.xcconfig"; path = "Target Support Files/Pods-WifiConnectExample/Pods-WifiConnectExample.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-WifiConnectExample-WifiConnectExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WifiConnectExample-WifiConnectExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-WifiConnectExample-WifiConnectExampleTests/Pods-WifiConnectExample-WifiConnectExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-WifiConnectExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WifiConnectExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B0B4F6E2821B895001F9A2B /* WifiConnectExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = WifiConnectExample.entitlements; path = WifiConnectExample/WifiConnectExample.entitlements; sourceTree = "<group>"; };
+		6B0B4F6F2821B895001F9A2B /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = WifiConnectExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-WifiConnectExample-WifiConnectExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WifiConnectExample-WifiConnectExampleTests.release.xcconfig"; path = "Target Support Files/Pods-WifiConnectExample-WifiConnectExampleTests/Pods-WifiConnectExample-WifiConnectExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -60,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-WifiConnectExample.a in Frameworks */,
+				6B0B4F702821B895001F9A2B /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +90,7 @@
 		13B07FAE1A68108700A75B9A /* WifiConnectExample */ = {
 			isa = PBXGroup;
 			children = (
+				6B0B4F6E2821B895001F9A2B /* WifiConnectExample.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -99,6 +104,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6B0B4F6F2821B895001F9A2B /* NetworkExtension.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-WifiConnectExample.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-WifiConnectExample-WifiConnectExampleTests.a */,
@@ -483,7 +489,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = WifiConnectExample/WifiConnectExample.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HG43MW867H;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WifiConnectExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -509,7 +517,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = WifiConnectExample/WifiConnectExample.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HG43MW867H;
 				INFOPLIST_FILE = WifiConnectExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -9,10 +9,16 @@ import {
   WifiConnectService,
   WifiConnectOptions,
   initWifiConnectService,
+  CampaignOptions,
+  initCampaignService,
 } from '@abl-solutions/wifi-connect';
 import { authorizationConfig } from './Login';
 
 let wifiConnectService: WifiConnectService;
+
+// usually, the device id should be a value that is uniquely assigned to a device. This identifier
+// is also used to send push notification to the device (e.g. with Google Firebase Cloud Messaging).
+const deviceId = uuidv4();
 
 export default function App() {
   const [authorization, setAuthorization] =
@@ -24,11 +30,27 @@ export default function App() {
       // initialize abl's WiFi-Connect SDK
       console.log('Initilizing wifi connect');
 
-      const options: WifiConnectOptions = {
+      const wifiConnectOptions: WifiConnectOptions = {
         accessToken: authorization.accessToken,
         wifiApiEndpoint: 'https://dev.api.wifi.connectivity.abl-solutions.io',
       };
-      wifiConnectService = initWifiConnectService(options);
+      wifiConnectService = initWifiConnectService(wifiConnectOptions);
+
+      // check if the user needs to watch a campaign
+      const campaignOptions: CampaignOptions = {
+        accessToken: authorization.accessToken,
+        campaignApiEndpoint:
+          'https://dev.api.wifi-connect.campaign-manager.ads.abl-solutions.io',
+      };
+      const campaignService = initCampaignService(campaignOptions);
+      campaignService.getNextCampaign(deviceId).then(campaign => {
+        if (campaign.required) {
+          Alert.alert('Campaign', 'Watch campaign...');
+          // open webview that shows campaign.campaignUrl...
+        } else {
+          Alert.alert('Campaign', 'No campaign required...');
+        }
+      });
     }
   }, [authorization]);
 
@@ -54,10 +76,6 @@ export default function App() {
             onPress: async () => {
               // accept legal terms
               await wifiConnectService.acceptLegalTerms(legalTerms.version);
-
-              // usually, the device id should be a value that is uniquely assigned to a device. This identifier
-              // is also used to send push notification to the device (e.g. with Google Firebase Cloud Messaging).
-              const deviceId = uuidv4();
 
               // connect to wifi
               await wifiConnectService.connectToWifi(deviceId, 'de-DE');

@@ -6,13 +6,13 @@ import { authorize } from 'react-native-app-auth';
 import { Buffer } from 'buffer';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  WifiConnect,
+  WifiConnectService,
   WifiConnectOptions,
-  init,
+  initWifiConnectService,
 } from '@abl-solutions/wifi-connect';
 import { authorizationConfig } from './Login';
 
-let wifiConnect: WifiConnect;
+let wifiConnectService: WifiConnectService;
 
 export default function App() {
   const [authorization, setAuthorization] =
@@ -28,7 +28,7 @@ export default function App() {
         accessToken: authorization.accessToken,
         wifiApiEndpoint: 'https://dev.api.wifi.connectivity.abl-solutions.io',
       };
-      wifiConnect = init(options);
+      wifiConnectService = initWifiConnectService(options);
     }
   }, [authorization]);
 
@@ -38,9 +38,9 @@ export default function App() {
         return;
       }
 
-      const legalTermsAccepted = await wifiConnect.legalTermsAccepted();
+      const legalTermsAccepted = await wifiConnectService.legalTermsAccepted();
       if (!legalTermsAccepted) {
-        const legalTerms = await wifiConnect.getLatestLegalTerms();
+        const legalTerms = await wifiConnectService.getLatestLegalTerms();
         Alert.alert('Legal Terms', legalTerms.legalTerms, [
           {
             text: 'Reject',
@@ -53,21 +53,21 @@ export default function App() {
             text: 'Accept',
             onPress: async () => {
               // accept legal terms
-              await wifiConnect.acceptLegalTerms(legalTerms.version);
+              await wifiConnectService.acceptLegalTerms(legalTerms.version);
 
               // usually, the device id should be a value that is uniquely assigned to a device. This identifier
               // is also used to send push notification to the device (e.g. with Google Firebase Cloud Messaging).
               const deviceId = uuidv4();
 
               // connect to wifi
-              await wifiConnect.connectToWifi(deviceId, 'de-DE');
+              await wifiConnectService.connectToWifi(deviceId, 'de-DE');
               setStatus('connected');
             },
           },
         ]);
       } else {
         // legal terms already accepted - connect to wifi
-        await wifiConnect.connectToWifi(uuidv4(), 'de-DE');
+        await wifiConnectService.connectToWifi(uuidv4(), 'de-DE');
         setStatus('connected');
       }
     } catch (e: any) {

@@ -3,20 +3,15 @@ import {
   WifiConnectService,
 } from '@abl-solutions/wifi-connect';
 
-let instance: WifiConnectService | null = null;
-
-export function createWifiConnectService(accessToken: string) {
-  instance = initWifiConnectService({
+export function createWifiConnectService(
+  accessToken: string,
+): WifiConnectService {
+  return initWifiConnectService({
     accessToken: accessToken,
     ignoreNetworkErrorOnSimulator: false,
     wifiApiEndpoint: 'https://dev.api.wifi.connectivity.abl-solutions.io',
+    android: {
+      timeSpanToWaitForPermissionDialogConfirmationInSeconds: 30,
+    },
   });
-}
-
-export function getWifiConnectService(): WifiConnectService {
-  if (!instance) {
-    throw new Error('WifiConnectService not initialized');
-  }
-
-  return instance;
 }

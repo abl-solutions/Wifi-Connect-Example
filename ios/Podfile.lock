@@ -1,5 +1,5 @@
 PODS:
-  - abl-wifi-connect (0.2.0):
+  - abl-wifi-connect (0.4.4):
     - React-Core
   - AppAuth (1.4.0):
     - AppAuth/Core (= 1.4.0)
@@ -519,7 +519,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  abl-wifi-connect: 69bd0c983b81e4a19a57f9c345c48c3909206085
+  abl-wifi-connect: 757a81afee996a2e1eb312c1d6f8a747b65b762a
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99

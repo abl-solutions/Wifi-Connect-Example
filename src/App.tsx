@@ -5,6 +5,8 @@ import { Appbar } from 'react-native-paper';
 import { Buffer } from 'buffer';
 import { v4 as uuidv4 } from 'uuid';
 import {
+  Campaign,
+  CampaignService,
   ErrorCode,
   LegalTerms,
   WifiConnectService,
@@ -12,12 +14,17 @@ import {
 import Login from './Login';
 import { Authorization, login } from './service/authorization.service';
 import WifiConnect from './WifiConnect';
-import { createWifiConnectService } from './service/wifi-connect.factory';
+import {
+  createWifiConnectService,
+  createWifiCampaignService,
+} from './service/wifi-connect.factory';
+import WebView from 'react-native-webview';
 
 // randomly create a device id for demo purposes
 const deviceId = uuidv4();
 
 let wifiConnectService: WifiConnectService;
+let campaignService: CampaignService;
 
 export default function App() {
   /* eslint-disable prettier/prettier */
@@ -25,6 +32,7 @@ export default function App() {
   const [isWifiConfigured, setIsWifiConfigured] = React.useState<boolean>(false);
   const [legalTerms, setLegalTerms] = React.useState<LegalTerms>();
   const [legalTermsAccepted, setLegalTermsAccepted] = React.useState<boolean | undefined>(undefined);
+  const [campaign, setCampaign] = React.useState<Campaign | undefined>(undefined);
   /* eslint-enable prettier/prettier */
 
   const refreshIsWifiConfigured = async () => {
@@ -46,11 +54,13 @@ export default function App() {
 
       refreshLegalTerms();
       refreshIsWifiConfigured();
+
+      campaignService = createWifiCampaignService(authorization.accessToken);
     }
 
     // return a clean up function to unregister the listener
     return () => wifiConnectService?.unregisterOnPermissionRejectedListener();
-  }, [authorization]);
+  }, [authorization, campaign]);
 
   const onLogin = async () => {
     try {
@@ -58,6 +68,7 @@ export default function App() {
       setAuthorization(auth);
     } catch (error: any) {
       Alert.alert('Failed to log in', error.message);
+      console.log(JSON.stringify(error));
     }
   };
 
@@ -99,20 +110,55 @@ export default function App() {
     }
   };
 
-  const mainContent = authorization ? (
-    <WifiConnect
-      isWifiConfigured={isWifiConfigured}
-      legalTerms={legalTerms}
-      legalTermsAccepted={legalTermsAccepted}
-      onAcceptLegalTerms={onAcceptLegalTerms}
-      onConnectToWifi={onConnectToWifi}
-      onDisconnectFromWifi={onDisconnectFromWifi}
-    />
-  ) : (
-    <View style={styles.center}>
-      <Login onLogin={onLogin} />
-    </View>
-  );
+  const onShowCampaign = async () => {
+    try {
+      const c = await campaignService.getNextCampaign(deviceId);
+      setCampaign(c);
+      console.log(
+        `showing campaign with url ${c.campaignUrl} - campaign required = ${c.required}`,
+      );
+    } catch (ex: any) {
+      console.log(JSON.stringify(ex));
+    }
+  };
+
+  const onNavigationStateChange = (navigationState: { url: string }) => {
+    if (navigationState?.url?.includes('close_campaign=true')) {
+      setCampaign(undefined);
+      console.log('campaign viewed - closing webview');
+    }
+  };
+
+  let mainContent;
+
+  if (authorization) {
+    if (!campaign) {
+      mainContent = (
+        <WifiConnect
+          isWifiConfigured={isWifiConfigured}
+          legalTerms={legalTerms}
+          legalTermsAccepted={legalTermsAccepted}
+          onAcceptLegalTerms={onAcceptLegalTerms}
+          onConnectToWifi={onConnectToWifi}
+          onDisconnectFromWifi={onDisconnectFromWifi}
+          onShowCampaign={onShowCampaign}
+        />
+      );
+    } else {
+      mainContent = (
+        <WebView
+          source={{ uri: campaign.campaignUrl }}
+          onNavigationStateChange={onNavigationStateChange}
+        />
+      );
+    }
+  } else {
+    mainContent = (
+      <View style={styles.center}>
+        <Login onLogin={onLogin} />
+      </View>
+    );
+  }
 
   const title = authorization
     ? `Hello ${getUsername(authorization.idToken)}!`

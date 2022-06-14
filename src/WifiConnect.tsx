@@ -1,6 +1,6 @@
 import type { LegalTerms } from '@abl-solutions/wifi-connect';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import { Switch, Text } from 'react-native-paper';
 import WifiConnectLegalTerms from './WifiConnectLegalTerms';
 
@@ -11,6 +11,7 @@ export interface WifiConnectProperties {
   onAcceptLegalTerms: () => void;
   onConnectToWifi: () => void;
   onDisconnectFromWifi: () => void;
+  onShowCampaign: () => void;
 }
 
 export default function WifiConnect(props: WifiConnectProperties) {
@@ -37,6 +38,14 @@ export default function WifiConnect(props: WifiConnectProperties) {
           <Switch
             value={props.isWifiConfigured}
             onValueChange={onChangeWifiState}
+          />
+        </View>
+        <View style={styles.item}>
+          <Button
+            onPress={props.onShowCampaign}
+            title="Show Campaign"
+            color="#841584"
+            accessibilityLabel="Load next campaign"
           />
         </View>
       </View>

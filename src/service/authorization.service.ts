@@ -6,9 +6,16 @@ const authorizationConfig: AuthConfiguration = {
   clientId: '<client-id>',
   redirectUrl: 'com.example.abl.wificonnectivity.login:/callback',
   additionalParameters: {
-    audience: 'https://api.wifi.connectivity.abl-solutions.io',
+    audience: 'https://dev.abl-solutions.io',
   },
-  scopes: ['openid', 'profile', 'email'],
+  scopes: [
+    'openid',
+    'profile',
+    'email',
+    'offline_access',
+    'https://scopes.wifi-connect.campaign-manager.ads.abl-solutions.io/',
+    'https://scopes.wifi.connectivity.abl-solutions.io/',
+  ],
   usePKCE: true,
   useNonce: true,
 };

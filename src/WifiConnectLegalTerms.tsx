@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 export interface WifiConnectLegalTermsProperties {
   legalTerms: string;
@@ -10,7 +10,7 @@ export default function WifiConnectLegalTerms(
   props: WifiConnectLegalTermsProperties,
 ) {
   return (
-    <View>
+    <View style={styles.center}>
       <Text>{props.legalTerms}</Text>
       <Button
         onPress={props.onAccept}
@@ -21,3 +21,11 @@ export default function WifiConnectLegalTerms(
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@abl-solutions/wifi-connect@^0.4.4":
-  "integrity" "sha512-mHrpeuLxdTDKp3zRYrE0GgGKKB0lAAEnICIgQR+k5prHEc+oyU9/LEam+vcwxQP5DfRhhJ7ZXAmx2jMJ+xuaqA=="
-  "resolved" "https://registry.npmjs.org/@abl-solutions/wifi-connect/-/wifi-connect-0.4.4.tgz"
-  "version" "0.4.4"
+"@abl-solutions/wifi-connect@^0.5.2":
+  "integrity" "sha512-uny3ea5c5Gg6nrHAca6kCfp652nXpajsrXFEPsi5EqZHcRdeIcT5G+lB6HIGEbSUqIcJQUoqdILo3S5uKnc1pQ=="
+  "resolved" "https://registry.npmjs.org/@abl-solutions/wifi-connect/-/wifi-connect-0.5.2.tgz"
+  "version" "0.5.2"
 
 "@ampproject/remapping@^2.1.0":
   "integrity" "sha512-hoyByceqwKirw7w3Z7gnIIZC3Wx3J484Y3L/cMpXFbr7d9ZQj2mODrirNzcJa+SM3UlpWXYvKV4RlRpFXlWgXg=="

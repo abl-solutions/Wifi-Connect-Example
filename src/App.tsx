@@ -12,7 +12,11 @@ import {
   WifiConnectService,
 } from '@abl-solutions/wifi-connect';
 import Login from './Login';
-import { Authorization, login } from './service/authorization.service';
+import {
+  Authorization,
+  getEmail,
+  login,
+} from './service/authorization.service';
 import WifiConnect from './WifiConnect';
 import {
   createWifiConnectService,
@@ -84,7 +88,10 @@ export default function App() {
     setIsWifiConfigured(true);
 
     try {
-      await wifiConnectService.connectToWifi(deviceId, 'de-DE');
+      await wifiConnectService.connectToWifi(deviceId, {
+        email: getEmail(authorization!!.idToken),
+        preferredLocale: 'de-DE',
+      });
       console.log('Wifi configured');
     } catch (e: any) {
       if (Platform.OS === 'android' && e.code === ErrorCode.USER_REJECTED) {
@@ -193,9 +200,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  logo: {
-    width: 70,
-    height: 70,
   },
 });

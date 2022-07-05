@@ -53,8 +53,6 @@ export default function App() {
     console.log('DeviceId: ', deviceId);
   };
 
-  getFcmToken();
-
   React.useEffect(() => {
     if (authorization) {
       // initialize abl's WiFi-Connect SDK

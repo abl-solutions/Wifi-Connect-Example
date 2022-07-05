@@ -3,7 +3,7 @@ import * as React from 'react';
 import { StyleSheet, View, Alert, Platform } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Buffer } from 'buffer';
-import { v4 as uuidv4 } from 'uuid';
+import messaging from '@react-native-firebase/messaging';
 import {
   Campaign,
   CampaignService,
@@ -25,7 +25,7 @@ import {
 import WebView from 'react-native-webview';
 
 // randomly create a device id for demo purposes
-const deviceId = uuidv4();
+let deviceId: string;
 
 let wifiConnectService: WifiConnectService;
 let campaignService: CampaignService;
@@ -48,6 +48,11 @@ export default function App() {
     setLegalTerms(await wifiConnectService.getLatestLegalTerms());
   };
 
+  const getFcmToken = async () => {
+    deviceId = await messaging().getToken();
+    console.log('DeviceId: ', deviceId);
+  };
+
   React.useEffect(() => {
     if (authorization) {
       // initialize abl's WiFi-Connect SDK
@@ -56,11 +61,40 @@ export default function App() {
         Alert.alert('Permission rejected', 'Please accept...');
       });
 
+      getFcmToken();
       refreshLegalTerms();
       refreshIsWifiConfigured();
 
       campaignService = createWifiCampaignService(authorization.accessToken);
     }
+
+    // User interacts with your notification by pressing on it
+    messaging().onNotificationOpenedApp(async remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      const campaignUrl = remoteMessage.notification?.body;
+
+      if (campaignUrl) {
+        setCampaign({
+          required: false,
+          campaignUrl,
+        });
+      }
+    });
+
+    messaging().onMessage(async remoteMessage => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      const campaignUrl = remoteMessage.notification?.body;
+
+      if (campaignUrl) {
+        setCampaign({
+          required: false,
+          campaignUrl,
+        });
+      }
+    });
 
     // return a clean up function to unregister the listener
     return () => wifiConnectService?.unregisterOnPermissionRejectedListener();
@@ -154,7 +188,8 @@ export default function App() {
     } else {
       mainContent = (
         <WebView
-          source={{ uri: campaign.campaignUrl }}
+          // @ts-ignore
+          source={{ uri: campaign?.campaignUrl }}
           onNavigationStateChange={onNavigationStateChange}
         />
       );

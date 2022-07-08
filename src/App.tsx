@@ -23,9 +23,7 @@ import {
   createWifiCampaignService,
 } from './service/wifi-connect.factory';
 import WebView from 'react-native-webview';
-
-// randomly create a device id for demo purposes
-let deviceId: string;
+import { useCallback } from 'react';
 
 let wifiConnectService: WifiConnectService;
 let campaignService: CampaignService;
@@ -37,6 +35,7 @@ export default function App() {
   const [legalTerms, setLegalTerms] = React.useState<LegalTerms>();
   const [legalTermsAccepted, setLegalTermsAccepted] = React.useState<boolean | undefined>(undefined);
   const [campaign, setCampaign] = React.useState<Campaign | undefined>(undefined);
+  const [deviceId, setDeviceId] = React.useState<string | undefined>(undefined);
   /* eslint-enable prettier/prettier */
 
   const refreshIsWifiConfigured = async () => {
@@ -48,10 +47,10 @@ export default function App() {
     setLegalTerms(await wifiConnectService.getLatestLegalTerms());
   };
 
-  const getFcmToken = async () => {
-    deviceId = await messaging().getToken();
+  const getFcmToken = useCallback(async () => {
+    setDeviceId(await messaging().getToken());
     console.log('DeviceId: ', deviceId);
-  };
+  }, [deviceId]);
 
   React.useEffect(() => {
     if (authorization) {
@@ -61,13 +60,21 @@ export default function App() {
         Alert.alert('Permission rejected', 'Please accept...');
       });
 
-      getFcmToken();
       refreshLegalTerms();
       refreshIsWifiConfigured();
 
       campaignService = createWifiCampaignService(authorization.accessToken);
     }
 
+    // return a clean up function to unregister the listener
+    return () => wifiConnectService?.unregisterOnPermissionRejectedListener();
+  }, [authorization, campaign]);
+
+  React.useEffect(() => {
+    getFcmToken();
+  }, [getFcmToken]);
+
+  React.useEffect(() => {
     // User interacts with your notification by pressing on it
     messaging().onNotificationOpenedApp(async remoteMessage => {
       console.log(
@@ -95,10 +102,7 @@ export default function App() {
         });
       }
     });
-
-    // return a clean up function to unregister the listener
-    return () => wifiConnectService?.unregisterOnPermissionRejectedListener();
-  }, [authorization, campaign]);
+  }, []);
 
   const onLogin = async () => {
     try {
@@ -122,7 +126,7 @@ export default function App() {
     setIsWifiConfigured(true);
 
     try {
-      await wifiConnectService.connectToWifi(deviceId, {
+      await wifiConnectService.connectToWifi(deviceId!, {
         email: getEmail(authorization!!.idToken),
         preferredLocale: 'de-DE',
       });
@@ -144,7 +148,7 @@ export default function App() {
     setIsWifiConfigured(false);
 
     try {
-      await wifiConnectService.deleteWifiConfiguration(deviceId);
+      await wifiConnectService.deleteWifiConfiguration(deviceId!);
       console.log('Disconnected from Wifi');
     } catch (e: any) {
       console.log(e);
@@ -153,7 +157,7 @@ export default function App() {
 
   const onShowCampaign = async () => {
     try {
-      const c = await campaignService.getNextCampaign(deviceId);
+      const c = await campaignService.getNextCampaign(deviceId!);
       setCampaign(c);
       console.log(
         `showing campaign with url ${c.campaignUrl} - campaign required = ${c.required}`,
